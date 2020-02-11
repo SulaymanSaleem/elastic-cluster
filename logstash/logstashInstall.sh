@@ -8,4 +8,8 @@ echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee 
 
 sudo apt-get update && sudo apt-get install logstash
 
-sudo systemctl enable logstash
+sudo cp conf.d /etc/logstash/
+
+sudo cp pipeline.yml /etc/logstash
+
+
