@@ -29,6 +29,7 @@ services:
         hard: -1
     volumes:
       - data01:/usr/share/elasticsearch/data
+      - certs:$CERTS_DIR
     ports:
       - 9200:9200
     healthcheck:
@@ -68,6 +69,7 @@ services:
         hard: -1
     volumes:
       - data02:/usr/share/elasticsearch/data
+      - certs:$CERTS_DIR
     networks:
       - elastic
   es03:
@@ -99,6 +101,7 @@ services:
         hard: -1
     volumes:
       - data03:/usr/share/elasticsearch/data
+      - certs:$CERTS_DIR
     networks:
       - elastic
 
