@@ -10,7 +10,7 @@ services:
       - discovery.seed_hosts=es02,es03
       - cluster.initial_master_nodes=es01,es02,es03
       - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
-      - bootstrap.memory_lock=true
+        #- bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xmx4g -Xms4g"
       - xpack.license.self_generated.type=trial 
       - xpack.security.enabled=true
