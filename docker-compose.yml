@@ -30,6 +30,7 @@ services:
     volumes:
       - data01:/usr/share/elasticsearch/data
       - certs:$CERTS_DIR
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     ports:
       - 9200:9200
     healthcheck:
@@ -70,6 +71,7 @@ services:
     volumes:
       - data02:/usr/share/elasticsearch/data
       - certs:$CERTS_DIR
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml  
     networks:
       - elastic
   es03:
@@ -102,6 +104,7 @@ services:
     volumes:
       - data03:/usr/share/elasticsearch/data
       - certs:$CERTS_DIR
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     networks:
       - elastic
 
@@ -114,6 +117,8 @@ services:
         source: ./kibana/config/kibana.yml
         target: /usr/share/kibana/config/kibana.yml
         read_only: true
+    links: ['es01','es02','es03']
+
     ports:
       - "5601:5601"
     networks:
