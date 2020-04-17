@@ -10,8 +10,8 @@ services:
       - discovery.seed_hosts=es02,es03
       - cluster.initial_master_nodes=es01,es02,es03
       - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
-        #- bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xmx4g -Xms4g"
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
       - xpack.license.self_generated.type=trial 
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=true
@@ -30,7 +30,6 @@ services:
     volumes:
       - data01:/usr/share/elasticsearch/data
       - certs:$CERTS_DIR
-      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     ports:
       - 9200:9200
     healthcheck:
@@ -52,7 +51,7 @@ services:
       - cluster.initial_master_nodes=es01,es02,es03
       - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xmx4g -Xms4g"
+      - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
       - xpack.license.self_generated.type=trial
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=true
@@ -71,7 +70,6 @@ services:
     volumes:
       - data02:/usr/share/elasticsearch/data
       - certs:$CERTS_DIR
-      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml  
     networks:
       - elastic
   es03:
@@ -85,7 +83,7 @@ services:
       - cluster.initial_master_nodes=es01,es02,es03
       - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xmx4g -Xms4g"
+      - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
       - xpack.license.self_generated.type=trial 
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=true
@@ -104,7 +102,6 @@ services:
     volumes:
       - data03:/usr/share/elasticsearch/data
       - certs:$CERTS_DIR
-      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     networks:
       - elastic
 
@@ -112,6 +109,7 @@ services:
     build:
       context: kibana/
     restart: unless-stopped
+    container_name: kibana
     volumes:
       - type: bind
         source: ./kibana/config/kibana.yml
@@ -131,6 +129,7 @@ services:
   grafana:
     restart: unless-stopped
     image: grafana/grafana:6.5.2
+    container_name: grafana
     environment:
       - GF_INSTALL_PLUGINS=grafana-piechart-panel,grafana-worldmap-panel,briangann-datatable-panel,praj-ams-datasource
     volumes:
