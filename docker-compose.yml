@@ -14,6 +14,7 @@ services:
       - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
       - xpack.license.self_generated.type=trial 
       - xpack.security.enabled=true
+      - xpack.security.transport.ssl.truststore.path=$CERTS_DIR/ca/ca.crt
       - xpack.security.http.ssl.enabled=true
       - xpack.security.http.ssl.key=$CERTS_DIR/es01/es01.key
       - xpack.security.http.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
@@ -110,6 +111,9 @@ services:
       context: kibana/
     restart: unless-stopped
     container_name: kibana
+    environment:
+      - "ELASTICSEARCH.SSL.CERTIFCICATEAAUTHORITUES=$CERTS_DIR/ca/ca.crt"
+      - "ELASTICSEARCH.SSL.VERIICATIONMODE=certificate"
     volumes:
       - type: bind
         source: ./kibana/config/kibana.yml
