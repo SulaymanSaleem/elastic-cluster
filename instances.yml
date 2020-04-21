@@ -1,7 +1,7 @@
 instances:
   - name: es01
     dns:
-      - es01 
+      - es01
       - localhost
     ip:
       - 127.0.0.1
@@ -12,11 +12,15 @@ instances:
       - localhost
     ip:
       - 127.0.0.1
-  
+
   - name: es03
     dns:
       - es03
       - localhost
     ip:
       - 127.0.0.1
-      
+
+  - name: 'kib01'
+    dns:
+      - kib01
+      - localhost

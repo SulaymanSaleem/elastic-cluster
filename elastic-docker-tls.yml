@@ -1,25 +1,23 @@
-version: '3.3'
+version: '2.2'
+
 services:
   es01:
-    restart: unless-stopped
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.5.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:${VERSION}
     container_name: es01
     environment:
       - node.name=es01
       - cluster.name=es-docker-cluster
       - discovery.seed_hosts=es02,es03
       - cluster.initial_master_nodes=es01,es02,es03
-      - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - xpack.license.self_generated.type=trial 
       - xpack.security.enabled=true
-      - xpack.security.transport.ssl.truststore.path=$CERTS_DIR/ca/ca.crt
-      - xpack.security.http.ssl.enabled=true
+      - xpack.security.http.ssl.enabled=true 
       - xpack.security.http.ssl.key=$CERTS_DIR/es01/es01.key
       - xpack.security.http.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
       - xpack.security.http.ssl.certificate=$CERTS_DIR/es01/es01.crt
-      - xpack.security.transport.ssl.enabled=true
+      - xpack.security.transport.ssl.enabled=true 
       - xpack.security.transport.ssl.verification_mode=certificate 
       - xpack.security.transport.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
       - xpack.security.transport.ssl.certificate=$CERTS_DIR/es01/es01.crt
@@ -33,26 +31,25 @@ services:
       - certs:$CERTS_DIR
     ports:
       - 9200:9200
+    networks:
+      - elastic
+
     healthcheck:
       test: curl --cacert $CERTS_DIR/ca/ca.crt -s https://localhost:9200 >/dev/null; if [[ $$? == 52 ]]; then echo 0; else echo 1; fi
       interval: 30s
       timeout: 10s
       retries: 5
-    networks:
-      - elastic
-     
+
   es02:
-    restart: unless-stopped
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.5.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:${VERSION}
     container_name: es02
     environment:
       - node.name=es02
       - cluster.name=es-docker-cluster
       - discovery.seed_hosts=es01,es03
       - cluster.initial_master_nodes=es01,es02,es03
-      - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - xpack.license.self_generated.type=trial
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=true
@@ -60,7 +57,7 @@ services:
       - xpack.security.http.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
       - xpack.security.http.ssl.certificate=$CERTS_DIR/es02/es02.crt
       - xpack.security.transport.ssl.enabled=true
-      - xpack.security.transport.ssl.verification_mode=certificate 
+      - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.security.transport.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
       - xpack.security.transport.ssl.certificate=$CERTS_DIR/es02/es02.crt
       - xpack.security.transport.ssl.key=$CERTS_DIR/es02/es02.key
@@ -73,26 +70,25 @@ services:
       - certs:$CERTS_DIR
     networks:
       - elastic
+
   es03:
-    restart: unless-stopped
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.5.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:${VERSION}
     container_name: es03
     environment:
       - node.name=es03
       - cluster.name=es-docker-cluster
       - discovery.seed_hosts=es01,es02
       - cluster.initial_master_nodes=es01,es02,es03
-      - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
-      - xpack.license.self_generated.type=trial 
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.license.self_generated.type=trial
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=true
       - xpack.security.http.ssl.key=$CERTS_DIR/es03/es03.key
       - xpack.security.http.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
-      - xpack.security.http.ssl.certificate=$CERTS_DIR/es03/es03.crt
+      - xpack.security.http.ssl.certificate=$CERTS_DIR/es02/es02.crt
       - xpack.security.transport.ssl.enabled=true
-      - xpack.security.transport.ssl.verification_mode=certificate 
+      - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.security.transport.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
       - xpack.security.transport.ssl.certificate=$CERTS_DIR/es03/es03.crt
       - xpack.security.transport.ssl.key=$CERTS_DIR/es03/es03.key
@@ -105,49 +101,26 @@ services:
       - certs:$CERTS_DIR
     networks:
       - elastic
-
-  kibana:
-    build:
-      context: kibana/
-    restart: unless-stopped
-    container_name: kibana
-    environment:
-      - "ELASTICSEARCH.SSL.CERTIFCICATEAAUTHORITUES=$CERTS_DIR/ca/ca.crt"
-      - "ELASTICSEARCH.SSL.VERIICATIONMODE=certificate"
-    volumes:
-      - type: bind
-        source: ./kibana/config/kibana.yml
-        target: /usr/share/kibana/config/kibana.yml
-        read_only: true
-    links: ['es01','es02','es03']
-
+  kib01:
+    image: docker.elastic.co/kibana/kibana:${VERSION}
+    container_name: kib01
+    depends_on: {"es01": {"condition": "service_healthy"}}
     ports:
-      - "5601:5601"
+      - 5601:5601
+    environment:
+      SERVERNAME: localhost
+      ELASTICSEARCH_URL: https://es01:9200
+      ELASTICSEARCH_HOSTS: https://es01:9200
+      ELASTICSEARCH_USERNAME: kibana
+      ELASTICSEARCH_PASSWORD: RRSQ9rYal0uVfTnEhJ7d
+      ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES: $CERTS_DIR/ca/ca.crt
+      SERVER_SSL_ENABLED: "true"
+      SERVER_SSL_KEY: $CERTS_DIR/kib01/kib01.key
+      SERVER_SSL_CERTIFICATE: $CERTS_DIR/kib01/kib01.crt
+    volumes:
+      - certs:$CERTS_DIR
     networks:
       - elastic
-    depends_on:
-      - es01
-      - es02
-      - es03
-
-  grafana:
-    restart: unless-stopped
-    image: grafana/grafana:6.5.2
-    container_name: grafana
-    environment:
-      - GF_INSTALL_PLUGINS=grafana-piechart-panel,grafana-worldmap-panel,briangann-datatable-panel,praj-ams-datasource
-    volumes:
-      - grafana-storage:/var/lib/grafana
-    user: root
-    ports:
-      - 3000:3000
-    networks:
-      - elastic
-    depends_on:
-      - es01
-      - es02
-      - es03
-
 volumes:
   data01:
     driver: local
@@ -157,9 +130,7 @@ volumes:
     driver: local
   certs:
     driver: local
-  grafana-storage:
 
 networks:
   elastic:
     driver: bridge
-
