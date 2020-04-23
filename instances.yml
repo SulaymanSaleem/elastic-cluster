@@ -4,21 +4,21 @@ instances:
       - es01
       - localhost
     ip:
-      - 127.0.0.1
+      - 10.0.0.30
 
   - name: es02
     dns:
       - es02
       - localhost
     ip:
-      - 127.0.0.1
+      - 10.0.0.30
 
   - name: es03
     dns:
       - es03
       - localhost
     ip:
-      - 127.0.0.1
+      - 10.0.0.30
 
   - name: 'kib01'
     dns:
