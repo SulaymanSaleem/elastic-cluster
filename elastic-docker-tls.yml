@@ -130,6 +130,7 @@ services:
       - GF_INSTALL_PLUGINS=grafana-piechart-panel,grafana-worldmap-panel,briangann-datatable-panel,praj-ams-datasource
     volumes:
       - grafana-storage:/var/lib/grafana
+      - ./provisioning:/etc/grafana/provisioning
     user: root
     ports:
       - 3000:3000
