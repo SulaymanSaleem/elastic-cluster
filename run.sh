@@ -23,3 +23,4 @@ docker exec -it es02 bash -c "bin/elasticsearch-plugin install repository-s3 <<<
 docker exec -it es03 bash -c "bin/elasticsearch-plugin install repository-s3 <<<"y""
 
 docker-compose -f elastic-docker-tls.yml restart
+

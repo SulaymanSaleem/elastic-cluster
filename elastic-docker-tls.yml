@@ -39,6 +39,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+    restart: always
 
   es02:
     image: docker.elastic.co/elasticsearch/elasticsearch:${VERSION}
@@ -70,6 +71,7 @@ services:
       - certs:$CERTS_DIR
     networks:
       - elastic
+    restart: always
 
   es03:
     image: docker.elastic.co/elasticsearch/elasticsearch:${VERSION}
@@ -101,6 +103,8 @@ services:
       - certs:$CERTS_DIR
     networks:
       - elastic
+    restart: always
+
   kib01:
     image: docker.elastic.co/kibana/kibana:${VERSION}
     container_name: kib01
@@ -121,25 +125,7 @@ services:
       - certs:$CERTS_DIR
     networks:
       - elastic
-  
-  grafana:
-    restart: unless-stopped
-    image: grafana/grafana:6.5.2
-    container_name: grafana
-    environment:
-      - GF_INSTALL_PLUGINS=grafana-piechart-panel,grafana-worldmap-panel,briangann-datatable-panel,praj-ams-datasource
-    volumes:
-      - grafana-storage:/var/lib/grafana
-      - ./provisioning:/etc/grafana/provisioning
-    user: root
-    ports:
-      - 3000:3000
-    networks:
-      - elastic
-    depends_on:
-      - es01
-      - es02
-      - es03
+    restart: always
 
 volumes:
   data01:
@@ -149,8 +135,6 @@ volumes:
   data03:
     driver: local
   certs:
-    driver: local
-  grafana-storage:
     driver: local
 
 networks:

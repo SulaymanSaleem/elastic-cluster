@@ -1,0 +1,26 @@
+version: '2.2'
+
+services:
+
+  grafana:
+    restart: unless-stopped
+    image: grafana/grafana:6.5.2
+    container_name: grafana
+    environment:
+      - GF_INSTALL_PLUGINS=praj-ams-datasource
+    volumes:
+      - grafana-storage:/var/lib/grafana
+      - ./defaults.ini:/usr/share/grafana/conf/defaults.ini
+    user: root
+    ports:
+      - 3000:3000
+    networks:
+      - elastic
+
+volumes:
+  grafana-storage:
+    driver: local
+
+networks:
+  elastic:
+    driver: bridge
