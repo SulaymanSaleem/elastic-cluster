@@ -1,7 +1,4 @@
-
-docker-compose -f grafana.yml up -d
-
-docker exec -w "/usr/share/grafana/conf/" grafana openssl req \
+openssl req \
   -new \
   -newkey rsa:4096 \
   -days 3650 \
@@ -11,4 +8,4 @@ docker exec -w "/usr/share/grafana/conf/" grafana openssl req \
   -keyout grafana.key \
   -out grafana.cert
 
-docker-compose -f grafana.yml restart
+docker-compose -f grafana.yml up -d
