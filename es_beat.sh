@@ -1,9 +1,13 @@
-### Install filebeats and metricbeats ###
-
-curl http://169.254.169.254/latest/meta-data/local-ipv4 > es_host
-sed -i '1s/^/export ES_HOST=/' es_host
-sed -i -e '$a\export ES_PASSWORD=' es_host
-source ./es_host
-
 git clone https://github.com/SulaymanSaleem/elastic-beats
-cp /var/lib/docker/volumes/es_certs/ ./elastic-beats/ -r
+
+IP=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
+
+sed -i 's/${ES_HOST}/'$IP'/g' elastic-beats/ubuntu/filebeat.yml
+sed -i 's/${ES_PASSWORD}/<PASSWORD>/g' elastic-beats/ubuntu/filebeat.yml
+
+sed -i 's/${ES_HOST}/'$IP'/g' elastic-beats/ubuntu/metricbeat.yml
+sed -i 's/${ES_PASSWORD}/<PASSWORD>/g' elastic-beats/ubuntu/metricbeat.yml
+
+sed -i 's/${ES_HOST}/'$IP'/g' elastic-beats/ubuntu/modules.d/elasticsearch.yml
+sed -i 's/${ES_HOST}/'$IP'/g' elastic-beats/ubuntu/modules.d/kibana.yml
+

@@ -25,11 +25,11 @@ docker exec -it es03 bash -c "bin/elasticsearch-plugin install repository-s3 <<<
 docker-compose -f elastic-docker-tls.yml restart
 
 ### Install filebeats and metricbeats ###
-git clone https://github.com/SulaymanSaleem/elastic-beats
-cd elastic-beats/ubuntu/
-curl http://169.254.169.254/latest/meta-data/local-ipv4 > es_host
-sed -i '1s/^/export ES_HOST=/' es_host
-source ./es_host
+#git clone https://github.com/SulaymanSaleem/elastic-beats
+#cd elastic-beats/ubuntu/
+#curl http://169.254.169.254/latest/meta-data/local-ipv4 > es_host
+#sed -i '1s/^/export ES_HOST=/' es_host
+#source ./es_host
 
 #### Grafana run script ####
-./grafanarun.sh
+#./grafanarun.sh
