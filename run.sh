@@ -1,6 +1,12 @@
+#taking ip address of instance to be used in instance.yml
+IP=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
+sed -i 's/${ES_HOST}/'$IP'/g' instances.yml
+
+#creating CA certificates and starting docker containers
 docker-compose -f create-certs.yml run --rm create_certs
 docker-compose -f elastic-docker-tls.yml up -d
 
+#creating initial passwords for cluster
 docker exec -it es01 bash -c "bin/elasticsearch-setup-passwords auto --url https://localhost:9200 <<<"y"" >elasticpasswords.txt
 
 awk '/PASSWORD kibana/{print $NF}' elasticpasswords.txt >> kibanapassword
@@ -18,6 +24,7 @@ docker-compose -f elastic-docker-tls.yml stop
 docker-compose -f elastic-docker-tls.yml up -d
 
 rm -rf kibanapassword elasticpassword
+#installing s3-snapshot plugin
 docker exec -it es01 bash -c "bin/elasticsearch-plugin install repository-s3 <<<"y""
 docker exec -it es02 bash -c "bin/elasticsearch-plugin install repository-s3 <<<"y""
 docker exec -it es03 bash -c "bin/elasticsearch-plugin install repository-s3 <<<"y""
