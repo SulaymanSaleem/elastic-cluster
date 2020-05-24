@@ -10,5 +10,13 @@ sed -i 's/${ES_HOST}/'$IP'/g' elastic-beats/ubuntu/metricbeat.yml
 sed -i 's/${ES_PASSWORD}/'$PASSWORD'/g' elastic-beats/ubuntu/metricbeat.yml
 
 sed -i 's/${ES_HOST}/'$IP'/g' elastic-beats/ubuntu/modules.d/elasticsearch.yml
-sed -i 's/${ES_HOST}/'$IP'/g' elastic-beats/ubuntu/modules.d/kibana.yml
+sed -i 's/${ES_PASSWORD}/'$PASSWORD'/g' elastic-beats/ubuntu/modules.d/elasticsearch.yml
 
+sed -i 's/${ES_HOST}/'$IP'/g' elastic-beats/ubuntu/modules.d/kibana.yml
+sed -i 's/${ES_PASSWORD}/'$PASSWORD'/g' elastic-beats/ubuntu/modules.d/kibana.yml
+
+sed -i 's/${ES_HOST}/'$IP'/g' elastic-beats/ubuntu/modules.d/elasticsearch-xpack.yml
+sed -i 's/${ES_PASSWORD}/'$PASSWORD'/g' elastic-beats/ubuntu/modules.d/elasticsearch-xpack.yml
+
+sed -i 's/${ES_PASSWORD}/'$PASSWORD'/g' provisioning/datasources/filebeat.yml
+sed -i 's/${ES_PASSWORD}/'$PASSWORD'/g' provisioning/datasources/metricbeat.yml
