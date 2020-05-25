@@ -10,7 +10,7 @@ datasources:
     tlsSkipVerify: true
     basicAuthUser: elastic
     secureJsonData:
-      basicAuthPassword: ""
+      basicAuthPassword: "${ES_PASSWORD}"
     jsonData:
       timeField: "@timestamp"
       esVersion: 70
