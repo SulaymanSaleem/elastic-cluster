@@ -13,6 +13,7 @@ services:
       - ./defaults.ini:/usr/share/grafana/conf/defaults.ini
       - ./grafana.key:/usr/share/grafana/conf/grafana.key
       - ./grafana.cert:/usr/share/grafana/conf/grafana.cert
+      - ./provisioning:/etc/grafana/provisioning/
     user: root
     ports:
       - 3000:3000
