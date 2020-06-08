@@ -43,7 +43,7 @@ sed -i 's/${BUCKET}/'$BUCKET'/g' logstashInstall/conf.d/spark_access.conf
 sed -i 's/${ES_HOST}/'$IP'/g' logstashInstall/logstash.yml
 sed -i 's/${ES_PASSWORD}/'$PASSWORD'/g' logstashInstall/logstash.yml
 
-
 ### for Grafana ###
 sed -i 's/${ES_PASSWORD}/'$PASSWORD'/g' provisioning/datasources/filebeat.yml
 sed -i 's/${ES_PASSWORD}/'$PASSWORD'/g' provisioning/datasources/metricbeat.yml
+sed -i 's/${ES_PASSWORD}/'$PASSWORD'/g' provisioning/datasources/logstash.yml
