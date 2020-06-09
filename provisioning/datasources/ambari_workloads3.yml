@@ -1,0 +1,11 @@
+apiVersion: 1
+
+datasources:
+  - name: Ambari WorkloadS3 
+    type: praj-ams-datasource
+    access: proxy
+    url: 
+    basicAuth: false
+    tlsSkipVerify: false
+    editable: true
+

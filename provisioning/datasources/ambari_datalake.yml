@@ -1,0 +1,11 @@
+apiVersion: 1
+
+datasources:
+  - name: Ambari Datalake
+    type: praj-ams-datasource
+    access: proxy
+    url: 
+    basicAuth: false
+    tlsSkipVerify: false
+    editable: true
+
